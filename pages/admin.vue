@@ -7,7 +7,7 @@
 export default {
   layout: "admin",
   setup() {
-    let test = "default";
+    let test = "default 1";
   },
 };
 </script>
