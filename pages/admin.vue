@@ -6,6 +6,8 @@
 <script>
 export default {
   layout: "admin",
-  setup() {},
+  setup() {
+    let test = "default";
+  },
 };
 </script>
