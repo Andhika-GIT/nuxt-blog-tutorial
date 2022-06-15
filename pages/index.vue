@@ -14,47 +14,12 @@ import { ref, reactive, onMounted } from "@nuxtjs/composition-api";
 export default {
   name: "IndexPage",
   components: { PostList },
-  asyncData(context, callback) {
-    setTimeout(() => {
-      callback(null, {
-        loadedPosts: [
-          {
-            id: "1",
-            title: "first post",
-            previewText: "this is our first post",
-            thumbnail:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-          },
-          {
-            id: "2",
-            title: "second post",
-            previewText: "this is our second post",
-            thumbnail:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-          },
-        ],
-      });
-    }, 1500);
-  },
-  setup() {
-    // let loadedPosts = ref([
-    //   {
-    //     id: "1",
-    //     title: "first post",
-    //     previewText: "this is our first post",
-    //     thumbnail:
-    //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-    //   },
-    //   {
-    //     id: "2",
-    //     title: "second post",
-    //     previewText: "this is our second post",
-    //     thumbnail:
-    //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-    //   },
-    // ]);
-    // return { loadedPosts };
-  },
+  computed: {
+    loadedPosts() {
+      return this.$store.getters.loadedPosts // get the data from vuex store so we can use it on view
+    }
+  }
+
 };
 </script>
 <style scoped>
