@@ -1,4 +1,3 @@
-import { create } from 'core-js/core/object'
 import Vuex from 'vuex'
 
 const createStore = () => {
