@@ -7,6 +7,7 @@
 </template>
 <script>
 import PostList from "~/components/Posts/PostList.vue";
+import { useStore, onMounted } from "@nuxtjs/composition-api";
 export default {
   components: { PostList },
   asyncData(context) {
@@ -37,6 +38,15 @@ export default {
     }).catch(e => { context.error(e) })
 
   },
+  created() {
+    this.$store.dispatch('setPosts', this.loadedPosts)
+  }
+  // setup() {
+  //   const store = useStore()
+  //   onMounted(() => {
+  //     store.dispatch('setPosts')
+  //   })
+  // }
 };
 </script>
 <style scoped>
