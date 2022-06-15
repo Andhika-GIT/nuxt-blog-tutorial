@@ -9,7 +9,7 @@
 import PostList from "~/components/Posts/PostList.vue";
 export default {
   components: { PostList },
-  asyncData(context) {
+  fetch(context) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve({
@@ -33,13 +33,18 @@ export default {
       }, 1500);
       // reject(new Error())
     }).then(data => {
-      return data
+      context.store.commit('setPosts', data.loadedPosts) // run the mutation from vuex store
     }).catch(e => { context.error(e) })
 
   },
-  created() {
-    this.$store.dispatch('setPosts', this.loadedPosts)
+  computed: {
+    loadedPosts() {
+      return this.$store.getters.loadedPosts // get the data from store so we can use it on view
+    }
   }
+  // created() {
+  //   this.$store.dispatch('setPosts', this.loadedPosts)
+  // }
 
 };
 </script>
@@ -50,3 +55,4 @@ export default {
   align-items: center;
 }
 </style>
+ 
