@@ -20,7 +20,7 @@ const createStore = () => {
                     setTimeout(() => {
                       vuexContent.commit('setPosts',  [
                         // fetch the data from store will make the blog posts page faster 
-                        // if there's no changes in data after we fetch, then we only fetch one time which will make the blog posts page faster
+                        // if there's no changes in data after we send request, then we run this request only once, which will make the blog posts page faster
                           {
                             id: "1",
                             title: "first post",
@@ -37,7 +37,7 @@ const createStore = () => {
                           },
                         ],
                       )
-                      resolve();
+                      resolve(); // we still need to put resolve so it tells promise that we finish
                     }, 1500);
                     // reject(new Error())
                   })
