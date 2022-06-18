@@ -2,14 +2,12 @@
   <div>
     <div class="admin-page">
       <section class="new-post">
-        <AppButton @click="$router.push('/admin/new-post')"
-          >Create Post</AppButton
-        >
+        <AppButton @click="$router.push('/admin/new-post')">Create Post</AppButton>
       </section>
       <section class="existing-posts">
         <h1>Existing Post</h1>
         <!-- pass the isAdmin = true -->
-        <PostList isAdmin />
+        <PostList isAdmin :posts="loadedPosts" />
       </section>
     </div>
   </div>
@@ -23,6 +21,11 @@ export default {
     PostList,
     AppButton,
   },
+  computed: {
+    loadedPosts() {
+      return this.$store.getters.loadedPosts // get the data from vuex store so we can use it on view
+    }
+  }
 };
 </script>
 <style scoped>
