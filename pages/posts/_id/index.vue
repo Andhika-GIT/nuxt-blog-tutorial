@@ -22,24 +22,18 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
-  asyncData(context, callback) {
-    console.log(context)
-    setTimeout(() => {
-      callback(null, {
-        loadedPost: {
-          id: `${context.params.id}`, // take the id from route url,
-          title: `First Post (ID : ${context.params.id})`,
-          previewText: "this is our first post",
-          author: "Hubla",
-          updateData: new Date(),
-          content: "some text for content of this post okay",
-          thumbnail:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-
-        }
+  asyncData(context) {
+    // console.log(context) -> check what context can do(it can catch the id of the post)
+    // send http request to get single post
+    // catch the id post using context.params
+    return axios.get(`https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${context.params.id}.json`)
+      .then(res => {
+        console.log(res) // check the respond ( look for the data post )
+        loadedPost: res.data
       })
-    }, 1000)
+      .catch(e => context.error(e))
   }
 }
 
