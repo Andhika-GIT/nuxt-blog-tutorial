@@ -1,4 +1,5 @@
 import Vuex from 'vuex'
+import axios from 'axios'
 
 const createStore = () => {
     return new Vuex.Store({
@@ -16,31 +17,17 @@ const createStore = () => {
             // nuxtServerInit will automatically dispatched this action
             // this will also automatically check if there's a data (data > 0) after we fetched
             nuxtServerInit(vuexContent,context) {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                      vuexContent.commit('setPosts',  [
-                        // fetch the data from store will make the blog posts page faster 
-                        // if there's no changes in data after we send request, then we run this request only once, which will make the blog posts page faster
-                          {
-                            id: "1",
-                            title: "first post",
-                            previewText: "this is our first post",
-                            thumbnail:
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-                          },
-                          {
-                            id: "2",
-                            title: "second post",
-                            previewText: "this is our second post",
-                            thumbnail:
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lceG8UoY7MwfJS7xXLn-S70J7yUNqcd0d5eVazbGXmIwMfNqF3iO96UXDN3DRIKhGCk&usqp=CAU",
-                          },
-                        ],
-                      )
-                      resolve(); // we still need to put resolve so it tells promise that we finish
-                    }, 1500);
-                    // reject(new Error())
-                  })
+               // if there's no changes in data after we send request, then we run this request only once, which will make the blog posts page faster
+               return axios.get('https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json')
+               .then(res => {
+                // console.log(res)
+                const postsArray = [] // make variable to store the data
+                for (const key in res.data) { // for every data array inside the res.data
+                  postsArray.push({...res.data[key], id: key}) // store the data using push array into postsArray variable
+                }
+                vuexContent.commit('setPosts',postsArray)}) // run the mutation, with postsArray variable as an argument to store the data 
+               .catch(e => context.error(e))
+               
             },
            
         },
