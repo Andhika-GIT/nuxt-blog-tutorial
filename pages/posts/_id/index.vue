@@ -31,7 +31,10 @@ export default {
     return axios.get(`https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${context.params.id}.json`)
       .then(res => {
         console.log(res) // check the respond ( look for the data post )
-        loadedPost: res.data
+        return {
+          loadedPost: res.data
+        }
+
       })
       .catch(e => context.error(e))
   }
