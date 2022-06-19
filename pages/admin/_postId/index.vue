@@ -9,20 +9,23 @@
 </template>
 <script>
 import AdminPostForm from "~/components/Admin/AdminPostForm.vue";
-import { ref, reactive, useRouter } from "@nuxtjs/composition-api";
+import axios from "axios";
 export default {
   components: { AdminPostForm },
-  setup() {
-    let loadedPost = reactive({
-      author: "Andhika",
-      title: "My Awesome Post",
-      content: "Super amazing, thanks",
-      thumbnailLink:
-        "https://d27fp5ulgfd7w2.cloudfront.net/wp-content/uploads/2019/01/08160759/tech-blogs-1.jpg",
-    });
+  asyncData(context) {
+    // console.log(context) -> check what context can do(it can catch the id of the post)
+    // send http request to get single post
+    // catch the id post using context.params
+    return axios.get(`https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${context.params.postId}.json`)
+      .then(res => {
+        console.log(res) // check the respond ( look for the data post )
+        return {
+          loadedPost: res.data
+        }
 
-    return { loadedPost };
-  },
+      })
+      .catch(e => context.error(e))
+  }
 };
 </script>
 <style scoped>
@@ -30,6 +33,7 @@ export default {
   width: 90%;
   margin: 20px auto;
 }
+
 @media (min-width: 768px) {
   .update-form {
     width: 500px;
