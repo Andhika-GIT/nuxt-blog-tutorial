@@ -9,16 +9,26 @@
 </template>
 <script>
 import AdminPostForm from "~/components/Admin/AdminPostForm.vue";
+import { useRouter } from "@nuxtjs/composition-api";
 import axios from "axios";
 export default {
   components: { AdminPostForm },
   setup() {
+
     // postData is editedPost that came from custom event in AdminPostForm.vue
     const onSubmitted = (postData) => {
-      // console.log(postData)
+      // // console.log(postData)
       // send request post to save data into firebase
-      axios.post('https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json', postData)
-        .then(result => { console.log(result) })
+      axios.post('https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
+        {
+          ...postData,
+          updatedDate: new Date()
+        }) // send all the data form submitted form, and also send the updatedDate (date when data is submitted) into firebase
+        .then(result => {
+          console.log(result)
+
+
+        })
         .catch(e => console.log(e))
 
     }
