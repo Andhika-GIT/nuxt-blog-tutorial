@@ -45,4 +45,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  env: {
+    // set the default url, if there's none, then use the firebase url as a default
+    baseUrl: process.env.BASE_URL || "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app" 
+  }
 };
