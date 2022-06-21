@@ -35,7 +35,8 @@ const createStore = () => {
         // nuxtServerInit will only run fetch on initial load (when website is open for the first time), which will make the blog posts page faster
         return axios
           .get(
-            "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json"
+            // use the default baseurl firebase (check nuxt.config for env setting)
+            `${process.env.baseUrl}/posts.json`
           )
           .then((res) => {
             // console.log(res)
@@ -59,7 +60,7 @@ const createStore = () => {
         // send request post to save data into firebase
         return axios
           .post(
-            "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json",
+           `${process.env.baseUrl}/posts.json`,
             createdPost
           ) // send all the new data form submitted form into firebase
           .then((result) => {
@@ -74,7 +75,7 @@ const createStore = () => {
       editPost(vuexContent, editedPost) {
         return axios
           .put(
-            `https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${editedPost.id}.json`,
+            `${process.env.baseUrl}/posts/${editedPost.id}.json`,
             editedPost
           ) // send the edited post data to firebase by using put request method
           .then((res) => {

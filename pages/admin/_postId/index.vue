@@ -20,7 +20,8 @@ export default {
     return axios
 
       .get(
-        `https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${context.params.postId}.json`
+        // use the default baseurl firebase (check nuxt.config for env setting)
+        `${process.env.baseUrl}/posts/${context.params.postId}.json`
       ) // send get request for single (by sending the id)
       .then((res) => {
         console.log(res); // check the respond ( look for the data post )
