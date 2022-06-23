@@ -29,7 +29,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ["@/assets/styles/main.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -48,6 +48,15 @@ export default {
 
   env: {
     // set the default url, if there's none, then use the firebase url as a default
-    baseUrl: process.env.BASE_URL || "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app" 
-  }
+    baseUrl:
+      process.env.BASE_URL ||
+      "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app",
+  },
+
+  transition: {
+    // transition between page,
+    name: "fade",
+    mode: "out-in",
+    // make global css file in assets, then use class name 'fade'
+  },
 };
