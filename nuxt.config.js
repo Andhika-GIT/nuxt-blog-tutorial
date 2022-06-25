@@ -54,6 +54,8 @@ export default {
     baseUrl:
       process.env.BASE_URL ||
       "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app",
+    // check project setting, look for web api key in firebase console
+    fbAPIKey: "AIzaSyA3OTjnZXAcbYxyDfbnHxbh8kX-hOydPaA",
   },
 
   transition: {
