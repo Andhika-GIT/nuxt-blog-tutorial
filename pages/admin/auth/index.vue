@@ -25,7 +25,7 @@
 import axios from "axios";
 import AppControlInput from "@/components/UI/AppControlInput";
 import AppButton from "@/components/UI/AppButton";
-import { ref, reactive } from "@nuxtjs/composition-api";
+import { ref, reactive, useStore, useRouter } from "@nuxtjs/composition-api";
 
 export default {
   name: "AdminAuthPage",
@@ -34,35 +34,23 @@ export default {
     AppButton,
   },
   setup() {
+    const store = useStore();
+    const router = useRouter();
     const isLogin = ref(true);
     const form = reactive({
       email: "",
       password: "",
     });
     const onSubmit = () => {
-      // read https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
-      // we have set up the default api key in nuxt.config.js
-
-      // make default send request url (default url is for login)
-      let authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.fbAPIKey}`;
-
-      isLogin.value != true
-        ? // if isLogin is false, then set the authUrl for sign up request url
-          (authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.fbAPIKey}`)
-        : "";
-
-      axios
-        .post(
-          authUrl,
-          { ...form, returnSecureToken: true }
-          // it needs email, password, returnSecureToken
-        )
-        .then((result) => {
-          console.log(result);
+      store
+        // run authenticateUser action
+        .dispatch("authenticateUser", {
+          // send the form data and isLogin boolean data
+          isLogin: isLogin.value,
+          ...form,
         })
-        .catch((e) => {
-          alert(e.response.data.error.message);
-          console.log(e);
+        .then(() => {
+          router.push("/admin");
         });
     };
 
