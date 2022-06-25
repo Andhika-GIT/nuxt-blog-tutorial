@@ -6,7 +6,8 @@ const createStore = () => {
   return new Vuex.Store({
     // set default variabel for data
     state: {
-      loadedPosts: [], // this will containts all the post data after nuxtServerInit action runs when the website is open
+      loadedPosts: [], // this will containts all the post data after nuxtServerInit action runs when the website is open\
+      authToken: "", // contain idToken after sign up or login
     },
     mutations: {
       // method for what you want to do with the data
@@ -27,6 +28,10 @@ const createStore = () => {
         // find post with the index of the post that has been edited, then replace the previous post index
         // this will replace the previous post that's not updated with the new updated post
         state.loadedPosts[postIndex] = editedPost;
+      },
+      authenticateUser(state, authToken) {
+        // catch the idToken from 'authenticateUser' action and store it in authToken state data
+        state.authToken = authToken;
       },
     },
     actions: {
@@ -59,10 +64,7 @@ const createStore = () => {
         };
         // send request post to save data into firebase
         return axios
-          .post(
-           `${process.env.baseUrl}/posts.json`,
-            createdPost
-          ) // send all the new data form submitted form into firebase
+          .post(`${process.env.baseUrl}/posts.json`, createdPost) // send all the new data form submitted form into firebase
           .then((result) => {
             // commit the addPost mutation
             vuexContent.commit("addPost", {
@@ -74,15 +76,41 @@ const createStore = () => {
       },
       editPost(vuexContent, editedPost) {
         return axios
-          .put(
-            `${process.env.baseUrl}/posts/${editedPost.id}.json`,
-            editedPost
-          ) // send the edited post data to firebase by using put request method
+          .put(`${process.env.baseUrl}/posts/${editedPost.id}.json`, editedPost) // send the edited post data to firebase by using put request method
           .then((res) => {
             // commit the ediPost mutation
             vuexContent.commit("editPost", editedPost);
           }) // go back to admin index
           .catch((e) => console.log(e));
+      },
+      authenticateUser(vuexContent, authData) {
+        // read https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
+        // we have set up the default api key in nuxt.config.js
+        // authData is a variabel that includes form data and isLogin that we received from auth index page
+
+        // make default send request url (default url is for login)
+        let authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.fbAPIKey}`;
+
+        authData.isLogin != true
+          ? // if isLogin is false, then set the authUrl for sign up request url
+            (authUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.fbAPIKey}`)
+          : "";
+
+        return axios
+          .post(
+            authUrl,
+            { ...authData, returnSecureToken: true }
+            // it needs email, password, returnSecureToken
+          )
+          .then((results) => {
+            console.log(results); // check the results
+            // commit the 'authenticateUser' mutation
+            vuexContent.commit("authenticateUser", results.data.idToken);
+          })
+          .catch((e) => {
+            alert(e.response.data.error.message);
+            console.log(e);
+          });
       },
     },
     getters: {
