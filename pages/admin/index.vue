@@ -2,9 +2,7 @@
   <div>
     <div class="admin-page">
       <section class="new-post">
-        <AppButton @click="$router.push('/admin/new-post')"
-          >Create Post</AppButton
-        >
+        <AppButton @click="$router.push('/admin/new-post')">Create Post</AppButton>
       </section>
       <section class="existing-posts">
         <h1>Existing Post</h1>
@@ -19,7 +17,7 @@ import PostList from "~/components/Posts/PostList";
 import AppButton from "~/components/UI/AppButton.vue";
 
 export default {
-  middleware: ["auth"],
+  middleware: ["auth", "check-auth"],
   components: {
     PostList,
     AppButton,
