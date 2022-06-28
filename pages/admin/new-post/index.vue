@@ -12,6 +12,7 @@ import AdminPostForm from "~/components/Admin/AdminPostForm.vue";
 import { useRouter } from "@nuxtjs/composition-api";
 import { useStore } from "@nuxtjs/composition-api";
 export default {
+  middleware: ["auth"],
   components: { AdminPostForm },
   setup() {
     const store = useStore();
