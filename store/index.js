@@ -33,6 +33,10 @@ const createStore = () => {
         // catch the idToken from 'authenticateUser' action and store it in authToken state data
         state.authToken = authToken;
       },
+      // mutation for clear token after expired
+      clearToken(state) {
+        state.authToken = null
+      }
     },
     actions: {
       // nuxtServerInit will automatically dispatched this action
@@ -112,12 +116,22 @@ const createStore = () => {
             console.log(results); // check the results
             // commit the 'authenticateUser' mutation
             vuexContent.commit("authenticateUser", results.data.idToken);
+            // run the 'setLogoutTimer' action and send 'expiredIn' data
+            // multiply the expiresIn , because it's milisecond
+            vuexContent.dispatch('setLogoutTimer', results.data.expiresIn * 1000)
           })
           .catch((e) => {
             alert(e.response.data.error.message);
             console.log(e);
           });
       },
+      // action that is start after user log in, this will clear token
+      setLogoutTimer (vuexContent, duration) {
+        // catch the duration parameter from 'authenticateUser' action
+        setTimeout(() => {
+          vuexContent.commit('clearToken') // run the 'clearToken' mutation
+        }, duration) // after the duration time
+      }
     },
     getters: {
       // to get or return the data
