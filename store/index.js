@@ -126,7 +126,9 @@ const createStore = () => {
       },
       isAuthenticated(state) {
         // send if authToken data is not null (this is for auth middleware)
-        return state.authToken != null;
+        if ( state.authToken ) {
+          return true;
+        }
       },
     },
   });
