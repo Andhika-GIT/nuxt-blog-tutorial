@@ -12,7 +12,7 @@ import AdminPostForm from "~/components/Admin/AdminPostForm.vue";
 import { useRoute, useRouter, useStore } from "@nuxtjs/composition-api";
 import axios from "axios";
 export default {
-  middleware: ["auth", "check-auth"],
+  middleware: ["check-auth", "auth"],
   components: { AdminPostForm },
   asyncData(context) {
     // console.log(context) -> check what context can do(it can catch the id of the post)
