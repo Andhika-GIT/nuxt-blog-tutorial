@@ -64,7 +64,10 @@ const createStore = () => {
         };
         // send request post to save data into firebase
         return axios
-          .post(`${process.env.baseUrl}/posts.json?auth=${vuexContent.state.authToken}`, createdPost) // send all the new data form submitted form into firebase
+          .post(
+            `${process.env.baseUrl}/posts.json?auth=${vuexContent.state.authToken}`,
+            createdPost
+          ) // send all the new data form submitted form into firebase
           .then((result) => {
             // commit the addPost mutation
             vuexContent.commit("addPost", {
@@ -76,7 +79,10 @@ const createStore = () => {
       },
       editPost(vuexContent, editedPost) {
         return axios
-          .put(`${process.env.baseUrl}/posts/${editedPost.id}.json?auth=${vuexContent.state.authToken}`, editedPost) // send the edited post data to firebase by using put request method and send idToken for authentication
+          .put(
+            `${process.env.baseUrl}/posts/${editedPost.id}.json?auth=${vuexContent.state.authToken}`,
+            editedPost
+          ) // send the edited post data to firebase by using put request method and send idToken for authentication
           .then((res) => {
             // commit the ediPost mutation
             vuexContent.commit("editPost", editedPost);
@@ -117,6 +123,10 @@ const createStore = () => {
       // to get or return the data
       loadedPosts(state) {
         return state.loadedPosts;
+      },
+      isAuthenticated(state) {
+        // send if authToken data is not null (this is for auth middleware)
+        return state.authToken != null;
       },
     },
   });
