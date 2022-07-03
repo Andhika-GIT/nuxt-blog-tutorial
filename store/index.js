@@ -35,8 +35,8 @@ const createStore = () => {
       },
       // mutation for clear token after expired
       clearToken(state) {
-        state.authToken = null
-      }
+        state.authToken = null;
+      },
     },
     actions: {
       // nuxtServerInit will automatically dispatched this action
@@ -118,12 +118,18 @@ const createStore = () => {
             vuexContent.commit("authenticateUser", results.data.idToken);
             // run the 'setLogoutTimer' action and send 'expiredIn' data
             // multiply the expiresIn , because it's milisecond
-            vuexContent.dispatch('setLogoutTimer', results.data.expiresIn * 1000)
+            vuexContent.dispatch(
+              "setLogoutTimer",
+              results.data.expiresIn * 1000
+            );
 
             // after the user log in, we can store data into localstorage by using localstorage.set(). BUT REMEMBER THIS ONLY RUN AFTER THE ACTION IS RUN ON THE CLIENT, SO AFTER LOG IN THE USER NEEDS TO GO TO ANOTHER PAGE, SO THAT THE ACTION IS RUNNING ON THE CLIENT
-            localStorage.setItem('token', results.data.idToken);
+            localStorage.setItem("token", results.data.idToken);
             // because date.getTime is milisecond, but expireIn is seconds, we change expiresIn into milisecond by multiply 1000
-            localStorage.setItem('tokenExpiration', new Date().getTime() + results.data.expiresIn * 1000)
+            localStorage.setItem(
+              "tokenExpiration",
+              new Date().getTime() + results.data.expiresIn * 1000
+            );
           })
           .catch((e) => {
             alert(e.response.data.error.message);
@@ -131,28 +137,31 @@ const createStore = () => {
           });
       },
       // action that is start after user log in, this will clear token
-      setLogoutTimer (vuexContent, duration) {
+      setLogoutTimer(vuexContent, duration) {
         // catch the duration parameter from 'authenticateUser' action
         setTimeout(() => {
-          vuexContent.commit('clearToken') // run the 'clearToken' mutation
-        }, duration) // after the duration time
+          vuexContent.commit("clearToken"); // run the 'clearToken' mutation
+        }, duration); // after the duration time
       },
       // action for take the localStorage data
-      initAuth (vuexContent) {
-        const token = localStorage.getItem('token') // take the token from localstorage
-        const tokenExpiration = localStorage.getItem('tokenExpiration') // take the tokenExpiration date from localstorage
+      initAuth(vuexContent) {
+        const token = localStorage.getItem("token"); // take the token from localstorage
+        const tokenExpiration = localStorage.getItem("tokenExpiration"); // take the tokenExpiration date from localstorage
 
         // if there's no token, or the the current date is bigger than tokenExpiraton date
-        if ( !token || new Date().getTime() > tokenExpiration) {
-          return // then exit initAuth action by return
+        if (!token || new Date().getTime() > tokenExpiration) {
+          return; // then exit initAuth action by return
         }
 
-        // run 'setLogoutTimer' action to set countdown until the token expired
-        // set the remaining time 
-        vuexContent.dispatch('setLogoutTimer', +tokenExpiration - new Date().getTime())
         // else, commit 'authenticateUser' mutation and pass the token data
-        vuexContent.commit('authenticateUser', token)
-      }
+        vuexContent.commit("authenticateUser", token);
+        // run 'setLogoutTimer' action to set countdown until the token expired
+        // set the remaining time
+        vuexContent.dispatch(
+          "setLogoutTimer",
+          +tokenExpiration - new Date().getTime()
+        );
+      },
     },
     getters: {
       // to get or return the data
@@ -161,7 +170,7 @@ const createStore = () => {
       },
       isAuthenticated(state) {
         // send if authToken data is not null (this is for auth middleware)
-        if ( state.authToken ) {
+        if (state.authToken) {
           return true;
         }
       },
