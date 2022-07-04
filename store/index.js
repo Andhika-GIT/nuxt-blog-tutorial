@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import axios from "axios";
-import { useRoute, useRouter } from "@nuxtjs/composition-api";
+import Cookies from "js-cookie";
 
 const createStore = () => {
   return new Vuex.Store({
@@ -116,19 +116,28 @@ const createStore = () => {
             console.log(results); // check the results
             // commit the 'authenticateUser' mutation
             vuexContent.commit("authenticateUser", results.data.idToken);
+
+            // after the user log in, we can store data into localstorage by using localstorage.set(). BUT REMEMBER THIS ONLY RUN AFTER THE ACTION IS RUN ON THE CLIENT, SO AFTER LOG IN THE USER NEEDS TO GO TO ANOTHER PAGE, SO THAT THE ACTION IS RUNNING ON THE CLIENT
+
+            // set the localStorage
+            localStorage.setItem("token", results.data.idToken); // token
+            // because date.getTime is milisecond, but expireIn is seconds, we change expiresIn into milisecond by multiply 1000
+            localStorage.setItem(
+              "tokenExpiration",
+              new Date().getTime() + results.data.expiresIn * 1000
+            );
+
+            // set the cookie
+            Cookies.set("token", results.data.idToken); // set the token
+            Cookies.set(
+              "tokenExpiration",
+              new Date().getTime() + results.data.expiresIn * 1000
+            );
             // run the 'setLogoutTimer' action and send 'expiredIn' data
             // multiply the expiresIn , because it's milisecond
             vuexContent.dispatch(
               "setLogoutTimer",
               results.data.expiresIn * 1000
-            );
-
-            // after the user log in, we can store data into localstorage by using localstorage.set(). BUT REMEMBER THIS ONLY RUN AFTER THE ACTION IS RUN ON THE CLIENT, SO AFTER LOG IN THE USER NEEDS TO GO TO ANOTHER PAGE, SO THAT THE ACTION IS RUNNING ON THE CLIENT
-            localStorage.setItem("token", results.data.idToken);
-            // because date.getTime is milisecond, but expireIn is seconds, we change expiresIn into milisecond by multiply 1000
-            localStorage.setItem(
-              "tokenExpiration",
-              new Date().getTime() + results.data.expiresIn * 1000
             );
           })
           .catch((e) => {
@@ -144,23 +153,55 @@ const createStore = () => {
         }, duration); // after the duration time
       },
       // action for take the localStorage data
-      initAuth(vuexContent) {
-        const token = localStorage.getItem("token"); // take the token from localstorage
-        const tokenExpiration = localStorage.getItem("tokenExpiration"); // take the tokenExpiration date from localstorage
+      initAuth(vuexContent, req) {
+        // decleare token and expiration date
+        let token;
+        let tokenExpiration;
+        // if running on the server
+        if (req) {
+          // take the data from Cookies that we have set in 'authenticateUser' action
 
-        // if there's no token, or the the current date is bigger than tokenExpiraton date
-        if (!token || new Date().getTime() > tokenExpiration) {
-          return; // then exit initAuth action by return
+          console.log(req);
+
+          if (!req.headers.cookies) {
+            // however if there's no cookies header (cookies data) then we return (exit)
+            return;
+          }
+
+          token = req.headers.cookies
+            .split(";") // split data by ";"
+            .find((c) => c.trim().startsWith("token=")) // find data or object, remove blank space by trim, use startsWith to return true or false (if the word start with "token=" then return true)
+            .split("=")[1]; // then split data again by "=" on array second key ([1])
+
+          tokenExpiration = req.headers.cookie
+            .split(";") // split data by ";"
+            .find((c) => c.trim().startsWith("tokenExpiration=")) // find data or object, remove blank space by trim, use startsWith to return true or false (if the word start with "tokenExpiration=" then return true)
+            .split("=")[1]; // then split data again by "=" on array second key ([1])
+
+          if (!token || !tokenExpiration) {
+            return; // if token or expirationdate are not found, then exit (return)
+          }
+        }
+        // otherwise if running on the client
+        else {
+          // take the data from localstorage that we have set in 'authenticateUser' action by using getItem
+          token = localStorage.getItem("token"); // take the token from localstorage
+          tokenExpiration = localStorage.getItem("tokenExpiration"); // take the tokenExpiration date from localstorage
+
+          // if there's no token, or the the current date is bigger than tokenExpiraton date
+          if (!token || new Date().getTime() > tokenExpiration) {
+            return; // then exit initAuth action by return
+          }
         }
 
-        // else, commit 'authenticateUser' mutation and pass the token data
-        vuexContent.commit("authenticateUser", token);
         // run 'setLogoutTimer' action to set countdown until the token expired
         // set the remaining time
         vuexContent.dispatch(
           "setLogoutTimer",
           +tokenExpiration - new Date().getTime()
         );
+        // else, commit 'authenticateUser' mutation and pass the token data
+        vuexContent.commit("authenticateUser", token);
       },
     },
     getters: {
