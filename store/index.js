@@ -190,7 +190,7 @@ const createStore = () => {
       },
       isAuthenticated(state) {
         // send if authToken data is not null (this is for auth middleware)
-        if (state.authToken) {
+        if (state.authToken != null) {
           return true;
         }
       },
