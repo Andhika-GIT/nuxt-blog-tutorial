@@ -146,15 +146,11 @@ const createStore = () => {
         let tokenExpiration;
         // if running on the server
         if (req) {
-          // take the data from Cookies that we have set in 'authenticateUser' action
-
-          console.log(req);
-
           if (!req.headers.cookies) {
             // however if there's no cookies header (cookies data) then we return (exit)
             return;
           }
-
+          // take the data from Cookies that we have set in 'authenticateUser' action
           token = req.headers.cookies
             .split(";") // split data by ";"
             .find((c) => c.trim().startsWith("token=")) // find data or object, remove blank space by trim, use startsWith to return true or false (if the word start with "token=" then return true)
@@ -164,21 +160,19 @@ const createStore = () => {
             .split(";") // split data by ";"
             .find((c) => c.trim().startsWith("tokenExpiration=")) // find data or object, remove blank space by trim, use startsWith to return true or false (if the word start with "tokenExpiration=" then return true)
             .split("=")[1]; // then split data again by "=" on array second key ([1])
-
-          if (!token || !tokenExpiration) {
-            return; // if token or expirationdate are not found, then exit (return)
-          }
         }
         // otherwise if running on the client
         else {
           // take the data from localstorage that we have set in 'authenticateUser' action by using getItem
           token = localStorage.getItem("token"); // take the token from localstorage
           tokenExpiration = localStorage.getItem("tokenExpiration"); // take the tokenExpiration date from localstorage
+        }
 
-          // if there's no token, or the the current date is bigger than tokenExpiraton date
-          if (!token || new Date().getTime() > tokenExpiration) {
-            return; // then exit initAuth action by return
-          }
+        // if there's no token, or the the current date is bigger than tokenExpiraton date
+        if (!token || new Date().getTime() > +tokenExpiration) {
+          console.log("no Token or invalid token");
+          vuexContent.commit("clearToken"); // runs clearToken mutation for clear token
+          return; // then exit initAuth action by return
         }
 
         // commit 'authenticateUser' mutation and pass the token data
