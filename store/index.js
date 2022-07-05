@@ -175,12 +175,21 @@ const createStore = () => {
         // if there's no token, or the the current date is bigger than tokenExpiraton date
         if (!token || new Date().getTime() > +tokenExpiration) {
           console.log("no Token or invalid token");
-          vuexContent.commit("clearToken"); // runs clearToken mutation for clear token
-          return; // then exit initAuth action by return
+          vuexContent.dispatch("logout"); // runs "logout" action to clear token and expiration date from localstorage and cookie
         }
-
+        console.log(token);
         // commit 'authenticateUser' mutation and pass the token data
         vuexContent.commit("authenticateUser", token);
+      },
+      // action for logout
+      logout(vuexContent) {
+        vuexContent.commit("clearToken"); // runs clearToken mutation for clear token
+        // clear token and expirationdate from cookie
+        Cookies.remove("token");
+        Cookies.remove("tokenExpiration");
+        // clear token and expirationdate from localstorage
+        localStorage.removeItem("token");
+        localStorage.removeItem("tokenExpiration");
       },
     },
     getters: {
@@ -189,10 +198,8 @@ const createStore = () => {
         return state.loadedPosts;
       },
       isAuthenticated(state) {
-        // send if authToken data is not null (this is for auth middleware)
-        if (state.authToken != null) {
-          return true;
-        }
+        // send true if authToken data is not null (this is for auth middleware)
+        return state.authToken != null;
       },
     },
   });

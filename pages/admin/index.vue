@@ -3,7 +3,9 @@
     <div class="admin-page">
       <section class="new-post">
         <AppButton @click="$router.push('/')">Go back to Home</AppButton>
-        <AppButton @click="$router.push('/admin/new-post')">Create Post</AppButton>
+        <AppButton @click="$router.push('/admin/new-post')"
+          >Create Post</AppButton
+        >
         <AppButton v-if="logout" @click="onLogout">Logout</AppButton>
       </section>
       <section class="existing-posts">
@@ -24,17 +26,19 @@ export default {
     PostList,
     AppButton,
   },
-  methods() {
-    // dispatch or run 'logout' action
-    this.$store.dispatch('logout')
+  methods: {
+    onLogout() {
+      this.$store.dispatch("logout"); // dispatch or run 'logout' action
+      this.$router.push("/admin/auth"); // redirect back to login page
+    },
   },
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts; // get the data from vuex store so we can use it on view
     },
     logout() {
-      return this.$store.state.authToken != null ? true : false // return true if there's token in state data store
-    }
+      return this.$store.state.authToken != null ? true : false; // return true if there's token in state data store
+    },
   },
 };
 </script>
