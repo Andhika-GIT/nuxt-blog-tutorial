@@ -145,13 +145,6 @@ const createStore = () => {
             console.log(e);
           });
       },
-      // action that is start after user log in, this will clear token
-      setLogoutTimer(vuexContent, duration) {
-        // catch the duration parameter from 'authenticateUser' action
-        setTimeout(() => {
-          vuexContent.commit("clearToken"); // run the 'clearToken' mutation
-        }, duration); // after the duration time
-      },
       // action for take the localStorage data
       initAuth(vuexContent, req) {
         // decleare token and expiration date
