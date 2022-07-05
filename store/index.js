@@ -133,12 +133,6 @@ const createStore = () => {
               "tokenExpiration",
               new Date().getTime() + results.data.expiresIn * 1000
             );
-            // run the 'setLogoutTimer' action and send 'expiredIn' data
-            // multiply the expiresIn , because it's milisecond
-            vuexContent.dispatch(
-              "setLogoutTimer",
-              results.data.expiresIn * 1000
-            );
           })
           .catch((e) => {
             alert(e.response.data.error.message);
@@ -187,13 +181,7 @@ const createStore = () => {
           }
         }
 
-        // run 'setLogoutTimer' action to set countdown until the token expired
-        // set the remaining time
-        vuexContent.dispatch(
-          "setLogoutTimer",
-          +tokenExpiration - new Date().getTime()
-        );
-        // else, commit 'authenticateUser' mutation and pass the token data
+        // commit 'authenticateUser' mutation and pass the token data
         vuexContent.commit("authenticateUser", token);
       },
     },
