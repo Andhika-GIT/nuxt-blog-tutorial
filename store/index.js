@@ -124,14 +124,18 @@ const createStore = () => {
             // because date.getTime is milisecond, but expireIn is seconds, we change expiresIn into milisecond by multiply 1000
             localStorage.setItem(
               "tokenExpiration",
-              new Date().getTime() + results.data.expiresIn * 1000
+              // because result.data.expiresIn is string, we have to convert it into number
+              new Date().getTime() +
+                Number.parseInt(results.data.expiresIn) * 1000
             );
 
             // set the cookie
             Cookies.set("token", results.data.idToken); // set the token
             Cookies.set(
               "tokenExpiration",
-              new Date().getTime() + results.data.expiresIn * 1000
+              // because result.data.expiresIn is string, we have to convert it into number
+              new Date().getTime() +
+                Number.parseInt(results.data.expiresIn) * 1000
             );
           })
           .catch((e) => {
