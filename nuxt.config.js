@@ -67,5 +67,6 @@ export default {
   },
   serverMiddleware: [
     // to executed node-js / server middleware
+    bodyParser.json(), // parse incoming jason body
   ],
 };
