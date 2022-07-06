@@ -1,3 +1,4 @@
+const bodyParser = require("body-parser"); // import body-parser node js middleware
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -64,4 +65,7 @@ export default {
     mode: "out-in",
     // make global css file in assets, then use class name 'fade'
   },
+  serverMiddleware: [
+    // to executed node-js / server middleware
+  ],
 };
