@@ -17,3 +17,8 @@ router.post("/track-data", (req, res) => {
   console.log("Stored Data!", req.body.data); // write data result in req.body.data
   res.status(200).json({ message: "Success !" }); // send status respond and message
 });
+
+module.exports = {
+  path: "/api", // define the path
+  handler: router,
+};
