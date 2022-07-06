@@ -187,9 +187,12 @@ const createStore = () => {
         // clear token and expirationdate from cookie
         Cookies.remove("token");
         Cookies.remove("tokenExpiration");
-        // clear token and expirationdate from localstorage
-        localStorage.removeItem("token");
-        localStorage.removeItem("tokenExpiration");
+        if (process.client) {
+          // if process runs on the client
+          // clear token and expirationdate from localstorage
+          localStorage.removeItem("token");
+          localStorage.removeItem("tokenExpiration");
+        }
       },
     },
     getters: {
