@@ -1,6 +1,7 @@
 const bodyParser = require("body-parser"); // import body-parser node js middleware
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  mode: "universal",
   head: {
     title: "project-2",
     htmlAttrs: {
