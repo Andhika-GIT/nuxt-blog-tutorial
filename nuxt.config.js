@@ -67,7 +67,7 @@ export default {
   },
   serverMiddleware: [
     // to executed node-js / server middleware
-    bodyParser.json(), // parse incoming jason body
+    bodyParser.json(), // parse incoming json body and send it into api/index as a req.body.data
     "~api", // folder location for the middleware we wanna add (in this is the api folder)
   ],
 };
