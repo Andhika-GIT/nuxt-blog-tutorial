@@ -71,4 +71,10 @@ export default {
     bodyParser.json(), // parse incoming json body and send it into api/index as a req.body.data
     "~api", // folder location for the middleware we wanna add (in this is the api folder)
   ],
+  generate: {
+    // this will create dynamic routes for id post, because dynamic id is not working as default in static app
+    routes: function () {
+      return [""];
+    },
+  },
 };
