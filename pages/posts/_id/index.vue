@@ -26,6 +26,12 @@ import axios from 'axios'
 export default {
   asyncData(context) {
     // console.log(context) -> check what context can do(it can catch the id of the post)
+    if (context.payLoad) {
+      // if there's postData in generate property inside nuxt.config
+      return {
+        loadedPost: context.payLoad.postData // we simply that generated postData and store it inside loadedPost property
+      }
+    }
     // send http request to get single post
     // catch the id post using context.params
     return axios.get(`${process.env.baseUrl}/posts/${context.params.id}.json`)
