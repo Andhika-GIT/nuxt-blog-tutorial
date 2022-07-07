@@ -84,8 +84,10 @@ export default {
         .then((res) => {
           const routes = [];
           for (const key in res.data) {
-            // insert the dynamic data into posts folder inside dist directory (dist/posts/)
-            routes.push(`/posts/${key}`);
+            routes.push({
+              route: `/posts/${key}`, // insert the dynamic data into posts folder inside dist directory (dist/posts/)
+              payLoad: { postData: res.data[key] }, // create payload property to stop the http request in posts/_id/index because we already send http request in here to generated the data
+            });
           }
           // run npm run generate to insert posts data into posts folder inside dist directory
           return routes;
