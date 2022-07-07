@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const bodyParser = require("body-parser"); // import body-parser node js middleware
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -74,7 +76,20 @@ export default {
   generate: {
     // this will create dynamic routes for id post, because dynamic id is not working as default in static app
     routes: function () {
-      return [""];
+      // run axios to retrieve the posts data
+      return axios
+        .get(
+          "https://nuxt-blog-755f4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json"
+        )
+        .then((res) => {
+          const routes = [];
+          for (const key in res.data) {
+            // insert the dynamic data into posts folder inside dist directory (dist/posts/)
+            routes.push(`/posts/${key}`);
+          }
+          // run npm run generate to insert posts data into posts folder inside dist directory
+          return routes;
+        });
     },
   },
 };
