@@ -137,6 +137,11 @@ const createStore = () => {
               new Date().getTime() +
                 Number.parseInt(results.data.expiresIn) * 1000
             );
+
+            // make post request to router link config that we have setup in api/index
+            return axios.post("http://localhost:3000/api/track-data", {
+              data: "Authenticated!",
+            });
           })
           .catch((e) => {
             alert(e.response.data.error.message);
